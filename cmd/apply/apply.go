@@ -10,7 +10,6 @@ import (
 	"github.com/itchio/wharf/pwr"
 
 	"github.com/dchest/safefile"
-	"github.com/itchio/butler/cmd/sizeof"
 	"github.com/itchio/butler/comm"
 	"github.com/itchio/butler/mansion"
 	"github.com/itchio/headway/state"
@@ -179,14 +178,6 @@ func Do(params Params) error {
 			return err
 		}
 		return errors.WithMessage(err, "patching")
-	}
-
-	if params.StagingDir != "" {
-		stagingDirSize, err := sizeof.Do(params.StagingDir)
-		if err != nil {
-			return err
-		}
-		consumer.Statf("Before commit, staging dir is %s", united.FormatBytes(stagingDirSize))
 	}
 
 	consumer.Opf("Committing...")

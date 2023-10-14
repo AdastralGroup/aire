@@ -6,14 +6,11 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 	"strings"
 	"time"
 
-	"github.com/itchio/butler/art"
 	"github.com/itchio/headway/state"
 	"github.com/olekukonko/tablewriter"
-	"github.com/skratchdot/open-golang/open"
 )
 
 var settings = &struct {
@@ -53,10 +50,6 @@ type JsonMessage map[string]interface{}
 
 type yesNoResponse struct {
 	Response bool
-}
-
-func JsonEnabled() bool {
-	return settings.json
 }
 
 // YesNo asks the user whether to proceed or not
@@ -263,31 +256,12 @@ func send(msgType string, obj JsonMessage) {
 			}
 		case "result":
 			// don't show outside json mode
-		case "login":
-			uri, _ := (obj["uri"]).(string)
-			showLogin(uri)
 		case "progress":
 			// already handled by pb
 		default:
 			log.Println(msgType, obj)
 		}
 	}
-}
-
-func showLogin(uri string) {
-	log.Println("\n" + art.ItchLogo)
-	log.Println("\nWelcome to the itch.io command-line tools!")
-	open.Start(uri) // disregard error
-	log.Println("If it hasn't already, open the following link in your browser to authenticate:")
-
-	log.Println(uri)
-
-	if runtime.GOOS == "windows" {
-		log.Println("\n(To copy text in cmd.exe: Alt+Space, Edit->Mark, select text, press Enter)")
-	}
-
-	log.Println("\nIf you're running this on a remote server, the redirect will fail to load.")
-	log.Println("In that case, copy the address you're redirected to, paste it below, and press enter.")
 }
 
 // sends a JSON-encoded message to the client

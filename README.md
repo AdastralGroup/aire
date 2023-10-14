@@ -1,6 +1,13 @@
+## THIS ONLY CONTAINS THE VERIFY AND APPLY COMMANDS
+To build for minimum size, run the following:
+``
+GOARCH=386 CGO_ENABLED=0 go build -gcflags=all="-l -B -C" -ldflags="-s -w"
+``
+
+On linux, this yields a binary of only 9.1MB. Using ``upx --best --lzma --brute --ultra-brute`` leads to a size of 2.4MB. Result!
 # butler
 
-[![Build Status](https://git.itch.ovh/itchio/butler/badges/master/build.svg)](https://git.itch.ovh/itchio/butler/builds)
+
 [![codecov](https://codecov.io/gh/itchio/butler/branch/master/graph/badge.svg)](https://codecov.io/gh/itchio/butler)
 [![Go Report Card](https://goreportcard.com/badge/github.com/itchio/butler)](https://goreportcard.com/report/github.com/itchio/butler)
 ![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)

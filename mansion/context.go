@@ -1,17 +1,12 @@
 package mansion
 
 import (
-	"context"
 	"fmt"
-	"net/http"
-	"time"
-
-	"github.com/itchio/butler/buildinfo"
 	"github.com/itchio/butler/comm"
-	itchio "github.com/itchio/go-itchio"
 	"github.com/itchio/httpkit/timeout"
 	"github.com/itchio/wharf/pwr"
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	"net/http"
 )
 
 type DoCommand func(ctx *Context)
@@ -63,11 +58,7 @@ func NewContext(app *kingpin.Application) *Context {
 		HTTPTransport: originalTransport,
 	}
 
-	client.Transport = &UserAgentSetter{
-		OriginalTransport: originalTransport,
-		Context:           ctx,
-	}
-
+	client.Transport = originalTransport
 	return ctx
 }
 
@@ -85,19 +76,6 @@ func (ctx *Context) Must(err error) {
 	}
 }
 
-func (ctx *Context) UserAgent() string {
-	version := buildinfo.Version
-	if version == "head" && buildinfo.Commit != "" {
-		version = buildinfo.Commit
-	}
-
-	res := fmt.Sprintf("butler/%s", version)
-	if ctx.UserAgentAddition != "" {
-		res = fmt.Sprintf("%s %s", res, ctx.UserAgentAddition)
-	}
-	return res
-}
-
 func (ctx *Context) CompressionSettings() pwr.CompressionSettings {
 	var algo pwr.CompressionAlgorithm
 
@@ -106,8 +84,6 @@ func (ctx *Context) CompressionSettings() pwr.CompressionSettings {
 		algo = pwr.CompressionAlgorithm_NONE
 	case "brotli":
 		algo = pwr.CompressionAlgorithm_BROTLI
-	case "gzip":
-		algo = pwr.CompressionAlgorithm_GZIP
 	default:
 		panic(fmt.Errorf("Unknown compression algorithm: %s", algo))
 	}
@@ -116,53 +92,4 @@ func (ctx *Context) CompressionSettings() pwr.CompressionSettings {
 		Algorithm: algo,
 		Quality:   int32(ctx.CompressionQuality),
 	}
-}
-
-func (ctx *Context) DefaultCtx() context.Context {
-	defaultCtx, _ := context.WithTimeout(context.Background(), time.Duration(ctx.ContextTimeout)*time.Second)
-	return defaultCtx
-}
-
-func (ctx *Context) NewClient(key string) *itchio.Client {
-	client := itchio.ClientWithKey(key)
-	client.HTTPClient = ctx.HTTPClient
-	client.SetServer(ctx.APIAddress())
-	client.UserAgent = ctx.UserAgent()
-	return client
-}
-
-func (ctx *Context) WebAddress() string {
-	return ctx.webAddress
-}
-
-func (ctx *Context) APIAddress() string {
-	return ctx.apiAddress
-}
-
-func (ctx *Context) SetAddress(address string) {
-	var err error
-	ctx.webAddress, err = stripApiSubdomain(address)
-	ctx.Must(err)
-	ctx.apiAddress, err = addApiSubdomain(address)
-	ctx.Must(err)
-}
-
-func (ctx *Context) EnsureDBPath() {
-	if ctx.DBPath == "" {
-		comm.Dief("butlerd: Missing database path: use --dbpath path/to/butler.db")
-	}
-}
-
-//
-
-type UserAgentSetter struct {
-	OriginalTransport http.RoundTripper
-	Context           *Context
-}
-
-var _ http.RoundTripper = (*UserAgentSetter)(nil)
-
-func (uas *UserAgentSetter) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Set("User-Agent", uas.Context.UserAgent())
-	return uas.OriginalTransport.RoundTrip(req)
 }
