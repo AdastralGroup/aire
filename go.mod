@@ -2,6 +2,10 @@ module github.com/itchio/butler
 
 go 1.14
 
+replace github.com/itchio/boar v0.0.0-20200305195307-d2befc01fa9e => github.com/AdastralGroup/boar v0.0.0-20231014135320-dd50b9e1dc6d
+
+replace github.com/itchio/hush v0.0.0-20200305195452-67599c102343 => github.com/AdastralGroup/hush v0.0.0-20200305195452-67599c102343
+
 require (
 	crawshaw.io/sqlite v0.3.2
 	github.com/BurntSushi/toml v0.3.1
