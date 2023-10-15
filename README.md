@@ -1,23 +1,19 @@
-## THIS ONLY CONTAINS THE VERIFY AND APPLY COMMANDS
+# aire
+
+## Note: This only contains the `verify` and `apply` commands!
+
+Aire is the Adastral patching tool. It's a ~~very cut down version~~ fork of itch.io's Butler, with the non-essential bits sliced off.
+
+This should only be used by emley really - to generate packages, you'll need the `diff` command, so just use itch.io's standard butler for the time being.
+
+## Size Savings
 To build for minimum size, run the following:
 ``
 GOARCH=386 CGO_ENABLED=0 go build -gcflags=all="-l -B -C" -ldflags="-s -w"
 ``
 
 On linux, this yields a binary of only 9.1MB. Using ``upx --best --lzma --brute --ultra-brute`` leads to a size of 2.4MB. Result!
-# butler
 
-
-[![codecov](https://codecov.io/gh/itchio/butler/branch/master/graph/badge.svg)](https://codecov.io/gh/itchio/butler)
-[![Go Report Card](https://goreportcard.com/badge/github.com/itchio/butler)](https://goreportcard.com/report/github.com/itchio/butler)
-![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)
-
-butler is *the itch.io command-line tools* - all by itself.
-
-**It is used by:**
-
-  * Content creators on [itch.io](https://itch.io) to push builds quickly & reliably
-  * [the itch app](https://github.com/itchio/itch) for some network, filesystem and patching operations
 
 ## Documentation
 
@@ -25,36 +21,10 @@ Documentation for butler is available as a Gitbook:
 
   * :memo: <https://itch.io/docs/butler>
 
-Questions about butler are welcome on its [Issue tracker](https://github.com/itchio/butler/issues),
-or, if the matter is private, [itch.io support](https://itch.io/support).
+Notes about applying and verifying are still applicable to aire.
 
-## Integrations
-
-The following projects integrate butler as part of their workflow:
-
-  * [itchy-electron](https://github.com/erbridge/itchy-electron) lets you package your Electron games for itch.io and upload them there
-  * [gradle-butler-plugin](https://github.com/mini2Dx/gradle-butler-plugin) is a Gradle plugin for automatically installing, updating, and running butler as part of your build.
-
-## Authors
-
-butler was mostly written by [Amos Wenger](https://github.com/fasterthanlime), but wouldn't have
-been possible without the work of many before him.
-
-Amos would like to thank in particular Leaf Corcoran, Jesús Higueras and Tomáš Duda.
+Questions about aire are welcome on its [Issue tracker](https://github.com/AdastralGroup/aire/issues).
 
 ## License
 
-butler is released under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Additional licenses
-
-While butler built from source is fully MIT-licensed, some components it can use at runtime
-(if present) have other licenses:
-
-  * The 7-zip decompression engine (the `github.com/itchio/boar/szextractor` package) opens
-  dynamic libraries for [libc7zip][], and [7-zip][], which have components licensed under the LGPL 2.1 license
-  and the MPL 2.0 license, along with specific terms for the RAR extraction code.
-
-[libc7zip]: https://github.com/itchio/libc7zip
-[7-zip]: http://7-zip.org/faq.html
-[7-zip FAQ]: http://7-zip.org/faq.html
+aire is released under the MIT License. See the [LICENSE](LICENSE) file for details.
